@@ -1,0 +1,23 @@
+---
+title: "Deep Learning with R"
+author: "Junrui Di"
+date: "8/6/2020"
+output: html_document
+---
+
+This document contains study notes for the book _Deep Learning with R_ by Francois Chollet and Joseph J. Allaire. 
+
+
+Chapter 1. What is deep learning
+
+Chapter 2. [The mathematical building blocks of neural networks](Chap2.html) [[R code]](Chap2.R)
+
+Chapter 3. [Getting started with neural networks](Chap3.html) [[R code]](Chap3.R)
+
+Chapter 4. [Fundamentals of machine learning](Chap4.html)
+
+Chapter 5. [Deep learning for computer vision](Chap5.html) [[R code]](Chap5.R)
+
+Chapter 6. [Deep learning for texts and sequences](Chap6.html) [[R code]](Chap6.R)
+
+Chapter 7. [Advanced Deep Learning Best Practices](Chap7.html)

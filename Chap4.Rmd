@@ -1,0 +1,103 @@
+---
+title: 'Chapter 4: Fundamentatls of Machine Learning'
+author: "Junrui Di"
+date: "7/23/2020"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+## 1. Types of Machine Learning
+
+* Supervised 
+
+* Unsupervised
+
+* Self-supervised: Supervised learning with no human labels in the loop, labels were learned from the input data based on a heuristic algorithm. E.g. _autoencoders_, where teh generated labels are the input, unmodified. 
+
+* Reinforcement Learning
+
+## 2. Model Evaluation
+
+Goal: Generaliation, to deal with overfitting. 
+
+Training, valdiation, and test sets. 
+
+K-Fold CV:
+```{r,eval=FALSE}
+k = 4
+indices = sample(1:nrow(data))
+folds = cut(indices, breaks = k, labels = FALSE)
+validation_scores = c() 
+for (i in 1:k) {
+  validation_indices = which(folds == i, arr.ind = TRUE) 
+  validation_data = data[validation_indices,] 
+  training_data = data[-validation_indices,]
+  
+  model = get_model()
+  model %>% train(training_data)
+  results = model %>% evaluate(validation_data) 
+  validation_scores = c(validation_scores, results$accuracy)
+}
+validation_score = mean(validation_scores)
+
+model = get_model()
+model %>% train(data)
+results = model %>% evaluate(test_data)
+
+```
+
+## 3. Data Preprocessing
+
+
+* Vectorization
+
+* Value normalization: take small values, be homogeneous. 
+
+__One crucial point about normalization__: You will normalize features in both training and test data. In this case, you want to compute the mean and SD on the training data only and then apply them to both the training and test data. 
+
+```{r, eval=FALSE}
+mean = apply(train_data, 2, mean)
+std = apply(train_data, 2, sd)
+
+train_data = scale(train_data, center = mean, scale = std)
+test_data = scale(test_data, center = mean, scale = std)
+```
+
+* Missing value: In NN, it is generally safe to input missing values as 0, wit the condition that 0 isn't already a meaningful value. The NN will learn. Note that if you’re expecting missing values in the test data, but the network was trained on data without any missing values, the network won’t have learned to ignore missing values! In this situation, you should artificially generate training samples with missing entries: copy some training samples several times, and drop some of the features that you expect are likely to be missing in the test data.
+
+
+## 4. Overfitting and underfitting
+
+
+### 4.1 Reduce the size of the network 
+
+### 4.2 Regularization
+
+To battle overfitting, we can put constraints on the complexity of the network by forcing its weights to take only small values, which makes the distribution of weight values more regular. 
+
+* L1 regularization
+
+* L2 regularization
+
+```{r, eval=FALSE}
+model <- keras_model_sequential() %>%
+  layer_dense(units = 16, kernel_regularizer = regularizer_l2(0.001), activation = "relu", input_shape = c(10000)) %>%
+  layer_dense(units = 16, kernel_regularizer = regularizer_l2(0.001), activation = "relu") %>%
+  layer_dense(units = 1, activation = "sigmoid")
+```
+
+`regularizer_l2(0.001)` means every coefficient in the weight matrix of the layer will add 0.001 * weight_coefficient_value to the total loss of the network. Note that because this penalty is only added at training time, the loss for this network will be much higher at training time than at test time.
+
+### 4.3 Dropout
+
+Randomly dropping out a number of output features of the layer. We can tune `drop_out_rate`, which is the fraction of the features to be zeroed out. 
+
+```{r,eval=FALSE}
+model <- keras_model_sequential() %>%
+layer_dense(units = 16, activation = "relu", input_shape = c(10000)) %>% layer_dropout(rate = 0.5) %>%
+layer_dense(units = 16, activation = "relu") %>%
+layer_dropout(rate = 0.5) %>%
+          layer_dense(units = 1, activation = "sigmoid")
+```
