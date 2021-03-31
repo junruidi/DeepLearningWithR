@@ -5,7 +5,7 @@ date: "8/6/2020"
 output: html_document
 ---
 
-This document contains study notes for the book _Deep Learning with R_ by Francois Chollet and Joseph J. Allaire. 
+This document contains __study notes__ for the book _Deep Learning with R_ by Francois Chollet and Joseph J. Allaire. 
 
 
 Chapter 1. What is deep learning
